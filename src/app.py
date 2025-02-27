@@ -1,5 +1,10 @@
 from flask import Flask, render_template
 import os
+import database as db
+
+####################################################################
+#Código sacado del video https://www.youtube.com/watch?v=Zfpbnmdi-pE
+####################################################################
 
 #Definir el html
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
