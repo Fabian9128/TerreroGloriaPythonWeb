@@ -3,60 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Clasificación Terrero y Gloria</title>
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Estilo para la fila seleccionada -->
+    <style>
+        .selected td {
+            background-color: #0d6efd !important; /* Azul Bootstrap */
+            color: white !important;
+        }
+    </style>
+    <!-- Script para seleccionar la fila -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() 
+        {
+            function seleccionarFila(fila) 
+            {
+                document.querySelectorAll("tbody tr").forEach(tr => tr.classList.remove("selected"));
+                fila.classList.add("selected");
+            }
+
+            document.querySelectorAll("tbody tr").forEach(tr => 
+            {
+                tr.addEventListener("click", function() 
+                {
+                    seleccionarFila(this);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     
-    <h1 class="text-center mt-5 mb-5 text-primary">Quiniela Terrero y Gloria</h1>
+    <h1 class="text-center mt-5 mb-5 text-primary">Clasificación Terrero y Gloria</h1>
 
     <div class="container">
         <div class="card shadow">
             <div class="card-body">
 
                 <!-- Formulario -->
-                <form action="" method="POST">
+                <form action="/jugador" method="POST">
                     <div class="row mb-3">
                         <div class="col">
-                            <label>Username</label>
-                            <input type="text" class="form-control mb-3" name="username">
+                            <label>NOMBRE</label>
+                            <input type="text" class="form-control mb-3" name="nombre">
                         </div>
                         <div class="col">
-                            <label>Name</label>
-                            <input type="text" class="form-control mb-3" name="name">
+                            <label>PUNTOS</label>
+                            <input type="text" class="form-control mb-3" name="puntos">
                         </div>
                         <div class="col">
-                            <label>Password</label>
-                            <input type="text" class="form-control mb-3" name="password">
+                            <label>EXACTO</label>
+                            <input type="text" class="form-control mb-3" name="exacto">
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary mb-3 mt-4" type="submit">Save</button>
+                            <label>DOBLES</label>
+                            <input type="text" class="form-control mb-3" name="dobles">
+                        </div>
+                        <!-- Botones -->
+                        <div class="col gap-2 mt-4">
+                            <button class="btn btn-primary" type="submit">Guardar</button>
+                            <button class="btn btn-danger" type="reset">Cancelar</button>
                         </div>
                     </div>
                 </form>
 
                 <!-- Tabla -->
-                <table class="table table-bordered">
-                    <thead>
-                        <th scope="col">#</th>
-                        <th scope="col">Username</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Password</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">NOMBRE</th>
+                            <th scope="col">PUNTOS</th>
+                            <th scope="col">EXACTO</th>
+                            <th scope="col">DOBLES</th>
+                        </tr>
                     </thead>
+                    <tbody>
+                        {% for jugador in clasificacion %}
+                            <tr>
+                                <td>{{jugador[0]}}</td>
+                                <td>{{jugador[1]}}</td>
+                                <td>{{jugador[2]}}</td>
+                                <td>{{jugador[3]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
-                <tbody>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tbody>
+                
+                <!-- Botones -->
+                <div class="d-flex gap-2 mt-4">
+                    <button class="btn btn-primary" type="submit">Nuevo</button>
+                    <button class="btn btn-primary" type="submit">Modificar</button>
+                    <button class="btn btn-primary" type="submit">Eliminar</button>
+                    <button class="btn btn-primary" type="submit">Ordenar</button>
+                </div>
 
             </div>
         </div>
