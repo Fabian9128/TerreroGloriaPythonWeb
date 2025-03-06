@@ -23,18 +23,41 @@ def home():
     #Sacar los datos
     return render_template('index.html', clasificacion=clasificacion)
 
-#Ruta guardar jugador nuevo
-@app.route('/jugador', methods=['POST'])
+#Ruta botón guardar
+@app.route('/guardar', methods=['POST'])
 def guardarJugador():
     #Obtener valores introducidos
+    accion = request.form['accion']
     nombre = request.form['nombre']
     puntos = request.form['puntos']
     exacto = request.form['exacto']
     dobles = request.form['dobles']
-    #Añadir jugador
-    jugadores.inserta_jugador(nombre,puntos,exacto, dobles, "Insular")
+    # Insertar nuevo jugador
+    if accion == "nuevo":     
+        jugadores.inserta_jugador(nombre, puntos, exacto, dobles, "Insular")
+    # Modificar jugador existente
+    elif accion == "modificar":
+        jugadores.modifica_jugador(nombre, puntos, exacto, dobles, "Insular")
     #Sacar los datos
     return redirect(url_for('home'))
+
+#Ruta botón eliminar
+@app.route('/eliminar/<string:nombre>', methods=['DELETE'])
+def eliminarJugador(nombre):
+    try:
+        jugadores.elimina_jugador(nombre)
+        return {"success": True}
+    except Exception as e:
+        return {"success": False, "error": str(e)}, 500
+    
+#Ruta botón ordernar
+@app.route('/ordenar', methods=['POST'])
+def ordenarClasificacion():
+    try:
+        jugadores.ordena_clasificacion("Puntos_Insular", "Exacto_Insular")
+        return redirect(url_for('home'))
+    except Exception as e:
+        return {"success": False, "error": str(e)}, 500
 
 #Lanzar la app
 if __name__ == '__main__':

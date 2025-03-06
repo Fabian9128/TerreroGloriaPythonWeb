@@ -87,6 +87,7 @@ class Clasificacion:
     
     def modifica_jugador(self, valor_nombre, valor_puntos, valor_exacto, valor_dobles, seleccion):
 
+        print(f"Intentando modificar: Nombre={valor_nombre}, Puntos={valor_puntos}, Exacto={valor_exacto}, Dobles={valor_dobles}, Selección={seleccion}")
         cur = self.miConexcion.cursor()
         #Ejecuta la consulta modificando los valores dependiendo de la seleccion
         if seleccion == "Insular":
