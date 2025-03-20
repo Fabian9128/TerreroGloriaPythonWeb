@@ -113,6 +113,39 @@
             document.getElementById("accion").value = "";
         }
 
+        function seleccionarClasificacion() 
+        {
+            let seleccion = document.getElementById("opciones").value;
+            console.log("Opción seleccionada:", seleccion);  // Depuración
+
+            fetch(`/clasificacion/${seleccion}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let tbody = document.querySelector("tbody");
+                    tbody.innerHTML = "";  // Limpiar la tabla
+
+                    data.forEach(jugador => {
+                        let fila = `
+                            <tr>
+                                <td>${jugador.nombre}</td>
+                                <td>${jugador.puntos}</td>
+                                <td>${jugador.exacto}</td>
+                                <td>${jugador.dobles}</td>
+                            </tr>
+                        `;
+                        tbody.insertAdjacentHTML("beforeend", fila);
+                    });
+
+                    console.log("Tabla actualizada con éxito.");
+                })
+                .catch(error => console.error("Error al cargar la clasificación:", error));
+        }
+
     </script>
 
 </head>
@@ -182,6 +215,7 @@
                     <button class="btn btn-primary" type="submit" id="modificar" onclick="activarFormulario('modificar')">Modificar</button>
                     <button class="btn btn-primary" type="button" id="eliminar" onclick="eliminarJugador()">Eliminar</button>
                     <form action="/ordenar" method="POST" style="display: inline;">
+                        <input type="hidden" name="opciones" id="opciones_hidden">
                         <button class="btn btn-primary" type="submit" id="ordenar">Ordenar</button>
                     </form>
 
@@ -189,14 +223,14 @@
                     <div class="d-inline-flex align-items-center" style="margin-left: 500px;">
                         <label for="opciones" class="mb-0 me-2">Selecciona una opción:</label>
                         <select class="form-select form-select-sm" id="opciones" style="width: auto;">
-                            <option value="opcion1">Insular</option>
-                            <option value="opcion2">Regional</option>
-                            <option value="opcion3">General</option>
+                            <option value="Insular">Insular</option>
+                            <option value="Regional">Regional</option>
+                            <option value="General">General</option>
                         </select>
                     </div>
 
                     <!-- Botón Seleccionar -->
-                    <button class="btn btn-primary ms-2" type="button" id="seleccionar" onclick="eliminarJugador()">Seleccionar</button>
+                    <button class="btn btn-primary ms-2" type="button" id="seleccionar" onclick="seleccionarClasificacion()">Seleccionar</button>
                 </div>
 
             </div>

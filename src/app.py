@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import os
 from database import Clasificacion
 
@@ -53,11 +53,48 @@ def eliminarJugador(nombre):
 #Ruta botón ordernar
 @app.route('/ordenar', methods=['POST'])
 def ordenarClasificacion():
-    try:
+    #Obtener la opción seleccionada
+    seleccion = request.form.get("opciones")
+    # Ordenar la clasificación según la opción seleccionada
+    if seleccion == "Insular":
         jugadores.ordena_clasificacion("Puntos_Insular", "Exacto_Insular")
-        return redirect(url_for('home'))
-    except Exception as e:
-        return {"success": False, "error": str(e)}, 500
+    elif seleccion == "Regional":
+        jugadores.ordena_clasificacion("Puntos_Regional", "Exacto_Regional")
+    else:
+        jugadores.ordena_clasificacion("Puntos_General", "Exacto_General")
+
+    return redirect(url_for('home'))
+
+#Ruta botón seleccionar
+@app.route("/clasificacion/<tipo>")
+def seleccionarClasificacion(tipo):
+    #Obtener datos de la clasificacion
+    datos = jugadores.consulta_clasificacion()
+    clasificacion = []
+    print("ENTRA AQUI 1")
+    for row in datos:
+        nombre = row[0]  #La primera columna es el nombre
+
+        # Convertir valores None a 0
+        p1 = row[1] if row[1] is not None else 0
+        e1 = row[2] if row[2] is not None else 0
+        d1 = row[3] if row[3] is not None else 0
+        p2 = row[4] if row[4] is not None else 0
+        e2 = row[5] if row[5] is not None else 0
+        d2 = row[6] if row[6] is not None else 0
+
+        if tipo == "Insular":
+            puntos, exacto, dobles = p1, e1, d1
+        elif tipo == "Regional":
+            puntos, exacto, dobles = p2, e2, d2
+        else:  #General
+            puntos = p1 + p2
+            exacto = e1 + e2
+            dobles = d1 + d2
+
+        clasificacion.append({"nombre": nombre, "puntos": puntos, "exacto": exacto, "dobles": dobles})
+
+    return jsonify(clasificacion)
 
 #Lanzar la app
 if __name__ == '__main__':
